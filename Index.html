@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>pixorahub_ | Official</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #00c6ff;
+            --bg: #0b0e14;
+            --glass: rgba(255, 255, 255, 0.03);
+            --text: #f8fafc;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 400px;
+            padding: 50px 20px;
+            text-align: center;
+        }
+
+        /* Profile Area */
+        .profile-pic {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            /* Replace the URL below with your actual Insta DP link if this one expires */
+            background: url(https://www.insthttps://www.instagram.com/pixorahub_/agram.com/pixorahub_) center/cover; 
+            margin: 0 auto 15px;
+            border: 2px solid var(--primary);
+            box-shadow: 0 0 20px rgba(0, 198, 255, 0.2);
+        }
+
+        /* SECRET TRIGGER: Clicking the Brand Name opens Admin */
+        .brand-name {
+            font-size: 1.8rem;
+            font-weight: 800;
+            cursor: default; /* Looks like normal text */
+            user-select: none;
+            background: linear-gradient(to right, #fff, #00c6ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .links-container {
+            margin-top: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .link-card {
+            background: var(--glass);
+            padding: 18px;
+            border-radius: 12px;
+            text-decoration: none;
+            color: white;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: 0.3s;
+        }
+
+        .link-card i {
+            font-size: 1.2rem;
+            margin-right: 15px;
+            width: 25px;
+            text-align: center;
+            color: var(--primary);
+        }
+
+        .link-card:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: scale(1.02);
+            border-color: var(--primary);
+        }
+
+        /* Admin Panel - Fully Hidden until triggered */
+        #admin-panel {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #161b22;
+            padding: 25px;
+            border-radius: 20px;
+            z-index: 9999;
+            width: 85%;
+            max-width: 350px;
+            box-shadow: 0 0 50px rgba(0,0,0,0.8);
+            border: 1px solid #30363d;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border: 1px solid #30363d;
+            background: #0d1117;
+            color: white;
+            box-sizing: border-box;
+        }
+
+        .admin-btn {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: none;
+            background: var(--primary);
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .close-admin {
+            background: transparent;
+            color: #8b949e;
+            font-size: 0.8rem;
+            margin-top: 15px;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="profile-pic"></div>
+        <h1 class="brand-name" ondblclick="unlockAdmin()">pixorahub_</h1>
+        <p style="color: #8b949e; font-size: 0.9rem;">Visualizing. Connecting. Creating.</p>
+
+        <div id="links-display" class="links-container">
+            </div>
+    </div>
+
+    <div id="admin-panel">
+        <h3 style="margin-top: 0;">Admin Mode</h3>
+        <input type="text" id="linkTitle" placeholder="Title (e.g. My Telegram)">
+        <input type="text" id="linkUrl" placeholder="URL (https://...)">
+        <button class="admin-btn" onclick="addNewLink()">Add Link</button>
+        <button class="admin-btn" style="background: #da3633;" onclick="clearAll()">Clear All</button>
+        <button class="close-admin" onclick="closeAdmin()">Close Panel</button>
+    </div>
+
+    <script>
+        // CONFIG
+        const SECRET_KEY = "pixora123";
+
+        // Auto-detect Icon based on URL
+        function getSocialIcon(url) {
+            const u = url.toLowerCase();
+            if (u.includes('instagram.com')) return 'fa-brands fa-instagram';
+            if (u.includes('t.me') || u.includes('telegram')) return 'fa-brands fa-telegram';
+            if (u.includes('youtube.com')) return 'fa-brands fa-youtube';
+            if (u.includes('twitter.com') || u.includes('x.com')) return 'fa-brands fa-x-twitter';
+            if (u.includes('github.com')) return 'fa-brands fa-github';
+            if (u.includes('linkedin.com')) return 'fa-brands fa-linkedin';
+            return 'fa-solid fa-link'; // Default link icon
+        }
+
+        function unlockAdmin() {
+            let p = prompt("Enter Secret Key:");
+            if(p === SECRET_KEY) {
+                document.getElementById('admin-panel').style.display = 'block';
+            }
+        }
+
+        function closeAdmin() {
+            document.getElementById('admin-panel').style.display = 'none';
+        }
+
+        function addNewLink() {
+            const title = document.getElementById('linkTitle').value;
+            const url = document.getElementById('linkUrl').value;
+
+            if(title && url) {
+                let links = JSON.parse(localStorage.getItem('pixora_links')) || [];
+                links.push({ title, url });
+                localStorage.setItem('pixora_links', JSON.stringify(links));
+                
+                document.getElementById('linkTitle').value = '';
+                document.getElementById('linkUrl').value = '';
+                render();
+            }
+        }
+
+        function render() {
+            const display = document.getElementById('links-display');
+            const links = JSON.parse(localStorage.getItem('pixora_links')) || [];
+            
+            display.innerHTML = links.map(link => `
+                <a href="${link.url}" class="link-card" target="_blank">
+                    <i class="${getSocialIcon(link.url)}"></i>
+                    ${link.title}
+                </a>
+            `).join('');
+        }
+
+        function clearAll() {
+            if(confirm("Delete everything?")) {
+                localStorage.removeItem('pixora_links');
+                render();
+            }
+        }
+
+        // Initial render
+        render();
+    </script>
+</body>
+</html>
